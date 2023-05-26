@@ -1,1 +1,1 @@
-# l4d2_player_join
+thông báo người chơi vào game
