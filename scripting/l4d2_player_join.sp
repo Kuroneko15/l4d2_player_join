@@ -69,7 +69,7 @@ public Action Event_PlayerDisconnect (Event event, const char[] name, bool dontB
 			strcopy(reason, sizeof(reason), "Văng Game");
 			
 		
-		PrintToChatAll("%s Người chơi \x04%s\x01 thời khỏi game. (lý do: %s)", TAG_INFO, player_name, reason);
+		PrintToChatAll("%s Người chơi \x04%s\x05 ngắt kết nối máy chủ cục bộ. \x03(Lý do: %s)", TAG_INFO, player_name, reason);
 		if (!dontBroadcast)
 		  SetEventBroadcast(event, true);
 	}
