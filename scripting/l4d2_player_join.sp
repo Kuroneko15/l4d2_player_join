@@ -9,32 +9,15 @@ public Plugin myinfo =
 {
 	name = "Simble Player Joined/Left Notifier",
 	author = "def (user00111), Lyseria",
-	description = "some thing new",
-	version = "1.3",
+	description = "New syntax",
+	version = "1.1",
 	url = ""
 };
-
-public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
-{
-	EngineVersion test = GetEngineVersion();
-	if( test != Engine_Left4Dead && test != Engine_Left4Dead2 )
-	{
-		strcopy(error, err_max, "Ko nhìn tên à chỉ hỗ trợ l4d2 thôi.Vì tôi thích thế xD.");
-		return APLRes_SilentFailure;
-	}
-	return APLRes_Success;
-}
 
 public void OnPluginStart()
 {
 	HookEvent("player_disconnect", Event_PlayerDisconnect, EventHookMode_Pre);
-	HookUserMessage(GetUserMessageId("TextMsg"), thongbao, true);
 }
-/*
-public void OnPluginEnd() {
-  UnhookEvent("player_disconnect", Event_PlayerDisconnect, EventHookMode_Pre);
-}
-*/
 
 public void OnClientPutInServer(int client)
 {
@@ -54,19 +37,9 @@ public void OnClientPutInServer(int client)
 		}
 	}
 }
-Action thongbao (UserMsg msg_id, BfRead msg, const int[] players, int playersNum, bool reliable, bool init) {
-	static char sMsg[254];
-	msg.ReadString(sMsg, sizeof sMsg);
-
-	if(StrContains(sMsg, "L4D_idle_spectator") != -1)
-		return Plugin_Handled;
-
-	return Plugin_Continue;
-}
 
 public Action Event_PlayerDisconnect (Event event, const char[] name, bool dontBroadcast)
 {
-	event.BroadcastDisabled = true;
 	int client = GetClientOfUserId(GetEventInt(event, "userid"));
 	if ((client != 0) && !IsFakeClient(client))
 	{
@@ -95,15 +68,10 @@ public Action Event_PlayerDisconnect (Event event, const char[] name, bool dontB
 		else if (StrContains(reason, "Disconnected", false) != -1)
 			strcopy(reason, sizeof(reason), "Văng Game");
 			
-		if(IsSurvivor(client))
-		{
-			PrintToChat(client,"%s Người chơi \x04%s\x01 thời khỏi game. (lý do: %s)", TAG_INFO, player_name, reason);
-		}
+		
+		PrintToChatAll("%s Người chơi \x04%s\x01 thời khỏi game. (lý do: %s)", TAG_INFO, player_name, reason);
+		if (!dontBroadcast)
+		  SetEventBroadcast(event, true);
 	}
 	return Plugin_Continue;
-}
-
-stock bool IsSurvivor(int client)
-{
-	return (client > 0 && client <= MaxClients && IsClientInGame(client) && GetClientTeam(client) == 2) && IsPlayerAlive(client) && !IsFakeClient(client);
 }
