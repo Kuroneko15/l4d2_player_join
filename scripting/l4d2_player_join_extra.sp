@@ -5,10 +5,10 @@
 
 public Plugin myinfo =
 {
-	name = "Player Join Left Notifier Extended",
+	name = "Player Join Left Notifier Extra",
 	author = "Lyseria",
 	description = "Yêu cầu left4hooks 1.33",
-	version = "1.5",
+	version = "1.9",
 	url = ""
 };
 
@@ -35,7 +35,7 @@ public void Event_PlayerConnect(Event event, const char[] name, bool dontBroadca
 			
 	char player_name[MAX_NAME_LENGTH];
 	event.GetString("name", player_name, sizeof player_name);
-	PrintToChatAll("\x03[★] \x04%s \x05đang tải dữ liệu\x03 - \x05Số người:\x04 %d/%d", player_name, players, maxplayers);
+	PrintToChatAll("\x03[★] \x04%s \x05chuẩn bị gia nhập server.\x03 - \x05Số người:\x04 %d/%d", player_name, players, maxplayers);
 	
 	char file[PLATFORM_MAX_PATH];
 	BuildPath(Path_SM, file, sizeof(file), "logs/join.log");
@@ -81,7 +81,7 @@ public void Event_PlayerDisconnect(Event event, const char[] name, bool dontBroa
 	else if (StrContains(reason, "Disconnected", false) != -1)
 		strcopy(reason, sizeof(reason), "Văng Game");
 		
-	PrintToChatAll("\x03[☆] \x04%s \x05rời phòng \x03 - \x05%s\x03 - \x05Còn lại:\x04 %d/%d", player_name, reason, players, maxplayers);
+	PrintToChatAll("\x03[☆] \x04%s \x05rời phòng.\x03 Lý do: %s. \x05Còn lại:\x04 %d/%d", player_name, reason, players, maxplayers);
 	
 	char file[PLATFORM_MAX_PATH];
 	BuildPath(Path_SM, file, sizeof(file), "logs/disconnect.log");
@@ -109,7 +109,8 @@ int GetRealPlayers(int client)
 	int players;
 	for (int i = 1; i <= MaxClients; i++)
 	{
-		if (i != client && IsClientConnected(i) && !IsFakeClient(i))
+		if (i != client && !IsFakeClient(i) && IsClientConnected(i))
+		//if (i != client && !IsFakeClient(i))
 			players++;
 	}
 	return players;
